@@ -20,7 +20,6 @@ public class MyLogTransformer implements ClassFileTransformer {
 
 
         ClassPool classPool = ClassPool.getDefault();
-
         classPool.insertClassPath(new ByteArrayClassPath(className, classfileBuffer));
 
         CtClass ctClass = null;
@@ -56,10 +55,7 @@ public class MyLogTransformer implements ClassFileTransformer {
 
                         declaredMethod.insertBefore("  {\n" +
                                 "StringBuilder sb = new StringBuilder(\"====== Method invoked:\");\n" +
-//                                "//sb.append(\");"+
                                 " sb.append(" + "\"" + declaredMethodName + "\"" + ");" +
-//                                "//sb.append('\");" +
-
                                 "System.out.println(sb.toString());\n" +
                                 "}");
 
@@ -70,13 +66,12 @@ public class MyLogTransformer implements ClassFileTransformer {
 
                 }
             }
+
             byte[] bytes = null;
 
             try {
                 bytes = ctClass.toBytecode();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (CannotCompileException e) {
+            } catch (IOException | CannotCompileException e) {
                 e.printStackTrace();
             }
             return bytes;
@@ -84,5 +79,5 @@ public class MyLogTransformer implements ClassFileTransformer {
 
         return null;
     }
-//
+
 }
