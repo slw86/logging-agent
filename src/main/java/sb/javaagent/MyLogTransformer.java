@@ -50,17 +50,39 @@ public class MyLogTransformer implements ClassFileTransformer {
 //                        {
 //                            StringBuilder sb = new StringBuilder();
 //                            sb.append("*** Method invoked: ").append("\"").append(declaredMethodName).append("\"");
+//
+//                            try {
+//                                if(declaredMethod.getParameterTypes().length > 0) {
+//                                    System.out.println($1);
+//                                }
+//                            } catch (NotFoundException e) {
+//                                e.printStackTrace();
+//                            }
+//
 //                            System.out.println(sb.toString());
 //                        }
+
+                        int paramsNumber = declaredMethod.getParameterTypes().length;
 
                         declaredMethod.insertBefore("  {\n" +
                                 "StringBuilder sb = new StringBuilder(\"====== Method invoked:\");\n" +
                                 " sb.append(" + "\"" + declaredMethodName + "\"" + ");" +
+
+                                "                                if($args.length > 0) {\n" +
+                                " sb.append(\" PARAMETERS:\");" +
+"for(int i = 0; i < $args.length; i++) {" +
+                                " sb.append($args[i]);" +
+                           //     "sb.append(\"\\n\");" +
+                                "}" +
+                                "}"+
+
                                 "System.out.println(sb.toString());\n" +
                                 "}");
-
+                        System.out.println("\n");
 
                     } catch (CannotCompileException e) {
+                        e.printStackTrace();
+                    } catch (NotFoundException e) {
                         e.printStackTrace();
                     }
 
